@@ -1,10 +1,16 @@
 const { watch } = require('node:fs/promises');
 const fs = require('node:fs/promises')
+
 async function fileWatch(){
     try{
+        
+        // for watching the changes in the file
         const watcher  =watch('./')
+
+        // for opening the file
         const fileHandler = await fs.open('file.txt',"r")
 
+        //  watcher function returns a asyncIterator 
         for await (const event of watcher){
             console.log(event)  /* outPut: { eventType: 'change', filename: 'file.txt' } */
             if(event.eventType ==="change" && event.filename==='file.txt'){
