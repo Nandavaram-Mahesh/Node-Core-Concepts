@@ -28,12 +28,10 @@ async function fileWatch(){
                 const offset = 0
                 const length = buff.byteLength
                 const position = 0
-
+                // Reading a file
                 const content = await fileHandler.read(buff,offset,length,position)
 
                 console.log(content)
-
-
 
             }
         }
