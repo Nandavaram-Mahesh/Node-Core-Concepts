@@ -1,24 +1,40 @@
-const http = require('node:http');
-
+const http = require("node:http");
 
 const agent = new http.Agent({ keepAlive: true });
 
-const options = {
-    agent:agent,
-    port: 8050,
-    host: 'localhost',
-    method: 'POST',
-    path: '/create-post',
-    headers:{
-        "Content-Type":"application/json",
-        "Content-Length":Buffer.byteLength(JSON.stringify({message:"Hi there!"}),'utf-8')
-    }
-  };
+const request = http.request({
+  agent: agent,
+  hostname: "localhost",
+  port: 8050,
+  method: "POST",
+  path: "/create-post",
+  headers: {
+    "Content-Type": "application/json",
+    name: "Joe",
+  },
+});
 
-const request = http.request(options)
+// This event is emitted only once
+request.on("response", (response) => {
+  console.log("--------- STATUS: ---------");
+  console.log(response.statusCode);
 
-request.on('response',()=>{})
+  console.log("--------- HEADERS: ---------");
+  console.log(response.headers);
 
-request.write(JSON.stringify({message:"Hi there!"}))
+  console.log("--------- BODY: ---------");
+  response.on("data", (chunk) => {
+    console.log(chunk.toString("utf-8"));
+  });
 
+  response.on("end", () => {
+    console.log("No more data in response.");
+  });
+});
 
+request.end(
+  JSON.stringify({
+    title: "Title of my post",
+    body: "This is some text and more and more.",
+  })
+);
